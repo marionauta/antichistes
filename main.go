@@ -16,6 +16,12 @@ var (
 	db *sqlx.DB
 )
 
+// APIResponse is the wrapper response type.
+type APIResponse struct {
+	Error int        `json:"error"`
+	Items []AntiJoke `json:"items"`
+}
+
 // AntiJoke is the basic type for this API.
 type AntiJoke struct {
 	ID         int    `json:"id" db:"id"`
@@ -65,9 +71,14 @@ func handleRandoms(limit int) func(http.ResponseWriter, *http.Request) {
 			return
 		}
 
+		res := APIResponse{
+			Error: 0,
+			Items: acs,
+		}
+
 		w.Header().Set("access-control-allow-origin", "*")
 		w.Header().Set("content-type", "application/json")
-		json.NewEncoder(w).Encode(acs)
+		json.NewEncoder(w).Encode(res)
 	}
 }
 
