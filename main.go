@@ -42,7 +42,9 @@ func main() {
 	http.HandleFunc("/vote", handleVote)
 	http.HandleFunc("/send", handleSend)
 
-	err = http.ListenAndServe(":80", nil)
+	port := os.Getenv("PORT")
+	addr := fmt.Sprintf(":%s", port)
+	err = http.ListenAndServe(addr, nil)
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
