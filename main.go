@@ -65,6 +65,7 @@ func handleRandoms(limit int) func(http.ResponseWriter, *http.Request) {
 			return
 		}
 
+		w.Header().Set("access-control-allow-origin", "*")
 		w.Header().Set("content-type", "application/json")
 		json.NewEncoder(w).Encode(acs)
 	}
@@ -90,6 +91,7 @@ func handleVote(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Set("access-control-allow-origin", "*")
 	w.WriteHeader(http.StatusOK)
 }
 
@@ -115,5 +117,6 @@ func handleSend(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Set("access-control-allow-origin", "*")
 	w.WriteHeader(http.StatusOK)
 }
