@@ -37,10 +37,10 @@ func main() {
 	}
 	defer db.Close()
 
-	http.HandleFunc("/random", handleRandoms(5))
-	http.HandleFunc("/random/one", handleRandoms(1))
-	http.HandleFunc("/vote", handleVote)
-	http.HandleFunc("/send", handleSend)
+	http.HandleFunc("/antichistes/random", handleRandoms(5))
+	http.HandleFunc("/antichistes/random/one", handleRandoms(1))
+	http.HandleFunc("/antichistes/vote", handleVote)
+	http.HandleFunc("/antichistes/send", handleSend)
 
 	port := os.Getenv("PORT")
 	addr := fmt.Sprintf(":%s", port)
