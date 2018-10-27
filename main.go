@@ -43,6 +43,7 @@ func main() {
 	}
 	defer db.Close()
 
+	http.HandleFunc("/", handleHome)
 	http.HandleFunc("/antichistes/random", handleRandoms(5))
 	http.HandleFunc("/antichistes/random/one", handleRandoms(1))
 	http.HandleFunc("/antichistes/vote", handleVote)
@@ -54,6 +55,16 @@ func main() {
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
+}
+
+func handleHome(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/" {
+		w.Header().Set("location", "/")
+		w.WriteHeader(http.StatusSeeOther)
+		return
+	}
+
+	http.ServeFile(w, r, "./index.html")
 }
 
 func handleRandoms(limit int) func(http.ResponseWriter, *http.Request) {
