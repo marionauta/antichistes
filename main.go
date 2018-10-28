@@ -115,6 +115,7 @@ func handleVote(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("access-control-allow-origin", "*")
 	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(APIResponse{Error: 0})
 }
 
 func handleSend(w http.ResponseWriter, r *http.Request) {
@@ -141,4 +142,5 @@ func handleSend(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("access-control-allow-origin", "*")
 	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(APIResponse{Error: 0})
 }
