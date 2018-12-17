@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -30,13 +32,16 @@ type AntiJoke struct {
 }
 
 func main() {
-	host := os.Getenv("DB_HOST")
-	name := os.Getenv("DB_NAME")
-	user := os.Getenv("DB_USER")
-	pass := os.Getenv("DB_PASS")
+	info, err := url.Parse(os.Getenv("DATABASE_URL"))
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+	host := info.Hostname()
+	name := strings.TrimPrefix(info.Path, "/")
+	user := info.User.Username()
+	pass, _ := info.User.Password()
 	connect := fmt.Sprintf("host=%s user=%s dbname=%s password=%s", host, user, name, pass)
 
-	var err error
 	db, err = sqlx.Connect("postgres", connect)
 	if err != nil {
 		log.Fatalln(err.Error())
