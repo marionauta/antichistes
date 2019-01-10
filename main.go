@@ -49,6 +49,7 @@ func main() {
 	defer db.Close()
 
 	http.HandleFunc("/", handleHome)
+	http.HandleFunc("/antichistes/", handleDocs)
 	http.HandleFunc("/antichistes/random", handleRandoms(5))
 	http.HandleFunc("/antichistes/random/one", handleRandoms(1))
 	http.HandleFunc("/antichistes/vote", handleVote)
@@ -70,6 +71,10 @@ func handleHome(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.ServeFile(w, r, "./index.html")
+}
+
+func handleDocs(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "./docs.html")
 }
 
 func handleRandoms(limit int) func(http.ResponseWriter, *http.Request) {
