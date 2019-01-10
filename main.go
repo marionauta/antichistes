@@ -70,11 +70,11 @@ func handleHome(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.ServeFile(w, r, "./index.html")
+	http.ServeFile(w, r, "pages/index.html")
 }
 
 func handleDocs(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "./docs.html")
+	http.ServeFile(w, r, "pages/docs.html")
 }
 
 func handleRandoms(limit int) func(http.ResponseWriter, *http.Request) {
