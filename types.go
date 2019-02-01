@@ -3,7 +3,7 @@ package main
 // APIResponse is the wrapper response type.
 type APIResponse struct {
 	Error int        `json:"error"`
-	Items []AntiJoke `json:"items"`
+	Items []AntiJoke `json:"items,omitempty"`
 }
 
 // AntiJoke is the basic type for this API.
