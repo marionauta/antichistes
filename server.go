@@ -10,12 +10,14 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/go-chi/chi"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
 
 type Server struct {
 	db *sqlx.DB
+	r  chi.Router
 }
 
 func StartServer() (*Server, error) {
@@ -35,7 +37,9 @@ func StartServer() (*Server, error) {
 		return nil, err
 	}
 
-	return &Server{db}, nil
+	r := chi.NewRouter()
+
+	return &Server{db, r}, nil
 }
 
 func (s *Server) Close() {
@@ -43,12 +47,6 @@ func (s *Server) Close() {
 }
 
 func (s *Server) home(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/" {
-		w.Header().Set("location", "/")
-		w.WriteHeader(http.StatusSeeOther)
-		return
-	}
-
 	http.ServeFile(w, r, "pages/index.html")
 }
 
@@ -58,11 +56,6 @@ func (s *Server) docs(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) randoms(limit int) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != "GET" {
-			w.WriteHeader(http.StatusMethodNotAllowed)
-			return
-		}
-
 		var acs []AntiJoke
 		err := s.db.Select(&acs, "SELECT id, first_part, second_part FROM antichistes WHERE public=true ORDER BY RANDOM() LIMIT $1", limit)
 		if err != nil {
@@ -83,11 +76,6 @@ func (s *Server) randoms(limit int) http.HandlerFunc {
 }
 
 func (s *Server) vote(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
-
 	r.ParseForm()
 	id, err := strconv.ParseInt(r.PostFormValue("id"), 10, 0)
 	if err != nil {
@@ -108,11 +96,6 @@ func (s *Server) vote(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) send(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
-
 	r.ParseForm()
 	firstPart := r.PostFormValue("first_part")
 	secondPart := r.PostFormValue("second_part")
