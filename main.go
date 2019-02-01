@@ -17,7 +17,7 @@ func main() {
 	server.routes()
 	port := os.Getenv("PORT")
 	addr := fmt.Sprintf(":%s", port)
-	err = http.ListenAndServe(addr, nil)
+	err = http.ListenAndServe(addr, server.r)
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
