@@ -38,6 +38,7 @@ func StartServer() (*Server, error) {
 	}
 
 	r := chi.NewRouter()
+	r.Use(whitelistHostname)
 	r.Use(basicCorsMiddleware)
 
 	return &Server{db, r}, nil
@@ -113,12 +114,4 @@ func (s *Server) send(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("content-type", "application/json")
 	json.NewEncoder(w).Encode(APIResponse{Error: 0})
-}
-
-func basicCorsMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("access-control-allow-origin", "*")
-
-		next.ServeHTTP(w, r)
-	})
 }
