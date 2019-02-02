@@ -15,11 +15,13 @@ import (
 	_ "github.com/lib/pq"
 )
 
+// Server contains the database reference and the router
 type Server struct {
 	db *sqlx.DB
 	r  chi.Router
 }
 
+// StartServer builds the server struct
 func StartServer() (*Server, error) {
 	info, err := url.Parse(os.Getenv("DATABASE_URL"))
 	if err != nil {
@@ -44,6 +46,7 @@ func StartServer() (*Server, error) {
 	return &Server{db, r}, nil
 }
 
+// Close closes the database conection
 func (s *Server) Close() {
 	s.db.Close()
 }
